@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { QuestionType } from "../../types/types";
+import { AnswersList } from "../answersList/AnswersList";
+
 export const QuestionList = ({
   questionData,
+  selectAnswer,
 }: {
   questionData: QuestionType[];
+  selectAnswer: (selectedAnswer: string, questionNumber: number) => void;
 }) => {
-  const [currQuestion, setCurrQuestion] = useState(1);
-  console.log(questionData);
+  const [currQuestionNum, setCurrQuestionNum] = useState(1);
+  const currQuestion = questionData[currQuestionNum - 1];
 
   return (
     <div className="flex flex-col bg-[#353962] w-full rounded-xl gap-6 px-3 py-5">
@@ -14,9 +18,14 @@ export const QuestionList = ({
         {questionData.map((question: QuestionType) => {
           return (
             <button
+              type="button"
               key={question.questionNumber}
-              onClick={() => setCurrQuestion(question.questionNumber)}
-              className="bg-[#393F6E] w-[45px] h-[45px] cursor-pointer rounded-full text-xl"
+              onClick={() => setCurrQuestionNum(question.questionNumber)}
+              className={`${
+                question.selectedAnswer
+                  ? "bg-gradient-to-r from-[#E65895] to-[#BC6BE8]"
+                  : "bg-[#393F6E]"
+              } bg-[#393F6E] w-[45px] h-[45px] cursor-pointer rounded-full text-xl`}
             >
               {question.questionNumber}
             </button>
@@ -25,22 +34,17 @@ export const QuestionList = ({
       </div>
       <div className="flex justify-center gap-2 text-xl">
         <div className="flex justify-center items-center gap-2 text-xl">
-          {questionData[currQuestion - 1]?.questionText.map((part, index) =>
+          {currQuestion?.questionText.map((part, index) =>
             part === "{placeholder}" ? (
-              questionData[currQuestion - 1]?.questionType ===
-              "flagQuestion" ? (
+              currQuestion?.questionType === "flagQuestion" ? (
                 <img
                   key={index}
-                  src={questionData[currQuestion - 1]?.correctAnswer.flags.svg}
-                  alt={
-                    questionData[currQuestion - 1]?.correctAnswer.name.common
-                  }
+                  src={currQuestion?.correctAnswer.flags.svg}
+                  alt={currQuestion?.correctAnswer.name.common}
                   className="w-[25px] h-[20px]"
                 />
               ) : (
-                <p key={index}>
-                  {questionData[currQuestion - 1]?.correctAnswer.capital}
-                </p>
+                <p key={index}>{currQuestion?.correctAnswer.capital}</p>
               )
             ) : (
               <p key={index}>{part}</p>
@@ -48,16 +52,12 @@ export const QuestionList = ({
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        {questionData[currQuestion - 1]?.answers?.map((answer) => (
-          <button
-            key={answer}
-            className="bg-[#393F6E] py-3 cursor-pointer hover:bg-gradient-to-r hover:from-[#E65895] hover:to-[#BC6BE8] text-xl rounded-xl"
-          >
-            {answer}
-          </button>
-        ))}
-      </div>
+      <AnswersList
+        disabled={currQuestion?.selectedAnswer !== ""}
+        currQuestion={currQuestion}
+        currQuestionNum={currQuestionNum}
+        selectAnswer={selectAnswer}
+      />
     </div>
   );
 };
