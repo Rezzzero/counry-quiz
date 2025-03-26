@@ -14,7 +14,7 @@ export const AnswersList = ({
   selectAnswer: (selectedAnswer: string, questionNumber: number) => void;
 }) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-6">
       {currQuestion?.answers?.map((answer) => {
         const isSelected = currQuestion.selectedAnswer === answer;
         const isSelectedWrong =
@@ -29,7 +29,7 @@ export const AnswersList = ({
             key={answer}
             disabled={disabled}
             onClick={() => selectAnswer(answer, currQuestionNum)}
-            className={`flex justify-center items-center gap-2 py-3 cursor-pointer text-xl rounded-xl 
+            className={`flex justify-center items-center gap-2 py-3 lg:py-4 cursor-pointer text-xl rounded-xl 
               ${
                 isSelected
                   ? "bg-gradient-to-r from-[#E65895] to-[#BC6BE8]"

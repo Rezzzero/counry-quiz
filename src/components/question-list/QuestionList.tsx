@@ -13,8 +13,8 @@ export const QuestionList = ({
   const currQuestion = questionData[currQuestionNum - 1];
 
   return (
-    <div className="flex flex-col bg-[#353962] w-full rounded-xl gap-6 px-3 py-5">
-      <div className="flex justify-between px-3">
+    <div className="flex flex-col bg-[#353962] w-full md:container md:mx-auto lg:max-w-[900px] rounded-xl gap-6 px-3 py-5 md:py-16 md:px-28 lg:px-38">
+      <div className="flex justify-between">
         {questionData.map((question: QuestionType) => {
           return (
             <button
@@ -25,7 +25,7 @@ export const QuestionList = ({
                 question.selectedAnswer
                   ? "bg-gradient-to-r from-[#E65895] to-[#BC6BE8]"
                   : "bg-[#393F6E]"
-              } bg-[#393F6E] w-[45px] h-[45px] cursor-pointer rounded-full text-xl`}
+              } bg-[#393F6E] w-[42px] h-[42px] lg:w-[45px] lg:h-[45px] cursor-pointer rounded-full text-lg`}
             >
               {question.questionNumber}
             </button>
