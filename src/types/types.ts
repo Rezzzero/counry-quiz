@@ -26,9 +26,10 @@ export interface CountryType {
 }
 
 export interface QuestionType {
-  questionText: string;
+  questionText: string[];
   questionNumber: number;
   answers: string[];
-  correctAnswer: string;
+  correctAnswer: CountryType;
   selectedAnswer?: string;
+  questionType: string;
 }

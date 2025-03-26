@@ -1,59 +1,46 @@
-import { useEffect, useState } from "react";
-import { CountryType, QuestionType } from "../../types/types";
-import { getQuestion } from "../../utils/utils";
+import { useState } from "react";
+import { QuestionType } from "../../types/types";
 export const QuestionList = ({
-  countryData,
+  questionData,
 }: {
-  countryData: CountryType[];
+  questionData: QuestionType[];
 }) => {
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [questionData, setQuestionData] = useState<{
-    question: string[] | null;
-    country: CountryType | null;
-    type: string | null;
-    answers: string[] | null;
-  }>({
-    question: null,
-    country: null,
-    type: null,
-    answers: null,
-  });
-
-  useEffect(() => {
-    if (countryData.length > 0) {
-      setQuestionData(getQuestion(countryData));
-    }
-  }, [countryData]);
-
-  const { question, country, type, answers } = questionData;
+  const [currQuestion, setCurrQuestion] = useState(1);
+  console.log(questionData);
 
   return (
     <div className="flex flex-col bg-[#353962] w-full rounded-xl gap-6 px-3 py-5">
       <div className="flex justify-between px-3">
-        {countryData.map((country: CountryType, index: number) => {
+        {questionData.map((question: QuestionType) => {
           return (
             <button
-              key={country.name.common}
-              className="bg-[#393F6E] w-[45px] h-[45px] rounded-full text-xl"
+              key={question.questionNumber}
+              onClick={() => setCurrQuestion(question.questionNumber)}
+              className="bg-[#393F6E] w-[45px] h-[45px] cursor-pointer rounded-full text-xl"
             >
-              {index + 1}
+              {question.questionNumber}
             </button>
           );
         })}
       </div>
       <div className="flex justify-center gap-2 text-xl">
-        <div className="flex justify-center gap-2 text-xl">
-          {question?.map((part, index) =>
+        <div className="flex justify-center items-center gap-2 text-xl">
+          {questionData[currQuestion - 1]?.questionText.map((part, index) =>
             part === "{placeholder}" ? (
-              type === "flagQuestion" ? (
+              questionData[currQuestion - 1]?.questionType ===
+              "flagQuestion" ? (
                 <img
                   key={index}
-                  src={country?.flags.svg}
-                  alt={country?.name.common}
-                  className="w-[25px]"
+                  src={questionData[currQuestion - 1]?.correctAnswer.flags.svg}
+                  alt={
+                    questionData[currQuestion - 1]?.correctAnswer.name.common
+                  }
+                  className="w-[25px] h-[20px]"
                 />
               ) : (
-                <p key={index}>{country?.capital}</p>
+                <p key={index}>
+                  {questionData[currQuestion - 1]?.correctAnswer.capital}
+                </p>
               )
             ) : (
               <p key={index}>{part}</p>
@@ -62,8 +49,11 @@ export const QuestionList = ({
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        {answers?.map((answer) => (
-          <button key={answer} className="bg-[#393F6E] py-3 text-xl rounded-xl">
+        {questionData[currQuestion - 1]?.answers?.map((answer) => (
+          <button
+            key={answer}
+            className="bg-[#393F6E] py-3 cursor-pointer hover:bg-gradient-to-r hover:from-[#E65895] hover:to-[#BC6BE8] text-xl rounded-xl"
+          >
             {answer}
           </button>
         ))}

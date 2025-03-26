@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { QuestionList } from "./components/question-list/QuestionList";
 import axios from "axios";
-import { CountryType } from "./types/types";
+import { CountryType, QuestionType } from "./types/types";
+import { getQuestion } from "./utils/utils";
 
 function App() {
   const [countryData, setCountryData] = useState<CountryType[]>([]);
   const [points, setPoints] = useState(0);
+  const [questionData, setQuestionData] = useState<QuestionType[]>([]);
+
   useEffect(() => {
     axios
       .get("https://restcountries.com/v3.1/all?")
@@ -17,6 +20,12 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    if (countryData.length > 0) {
+      setQuestionData(getQuestion(countryData));
+    }
+  }, [countryData]);
+
   return (
     <>
       <div className="container mx-auto pt-32 px-5 flex flex-col gap-12 text-white">
@@ -26,7 +35,7 @@ function App() {
             <p className="text-sm">🏆</p> <p>{points}/10 Points</p>
           </div>
         </div>
-        <QuestionList countryData={countryData} />
+        <QuestionList questionData={questionData} />
       </div>
     </>
   );
